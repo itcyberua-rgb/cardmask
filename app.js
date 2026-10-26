@@ -7,6 +7,7 @@
   const copyButton = document.querySelector('#copyButton');
   const fileInput = document.querySelector('#fileInput');
   const fileButton = document.querySelector('#fileButton');
+  const fileDrop = document.querySelector('#fileDrop');
   const fileName = document.querySelector('#fileName');
   const resultList = document.querySelector('#resultList');
   const emptyState = document.querySelector('#emptyState');
@@ -178,7 +179,7 @@
 
   function clearAll() {
     sourceText.value = '';
-    fileName.textContent = 'TXT / CSV / JSON до 50 МБ';
+    fileName.textContent = 'файл не выбран';
     safeOutput = [];
     matchedCount.textContent = '0';
     validCount.textContent = '0';
@@ -223,6 +224,30 @@
   clearButton.addEventListener('click', clearAll);
   copyButton.addEventListener('click', copySafeOutput);
   fileButton.addEventListener('click', () => fileInput.click());
+  fileDrop.addEventListener('click', (event) => {
+    if (event.target !== fileButton) fileInput.click();
+  });
+  fileDrop.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      fileInput.click();
+    }
+  });
+  ['dragenter', 'dragover'].forEach((eventName) => {
+    fileDrop.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      fileDrop.classList.add('is-dragging');
+    });
+  });
+  ['dragleave', 'drop'].forEach((eventName) => {
+    fileDrop.addEventListener(eventName, (event) => {
+      event.preventDefault();
+      fileDrop.classList.remove('is-dragging');
+    });
+  });
+  fileDrop.addEventListener('drop', (event) => {
+    loadLocalFile(event.dataTransfer.files?.[0]);
+  });
   fileInput.addEventListener('change', () => {
     loadLocalFile(fileInput.files?.[0]);
     fileInput.value = '';

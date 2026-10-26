@@ -22,7 +22,7 @@
 
       <main>
         <section class="hero" aria-labelledby="page-title">
-          <div class="eyebrow"><span class="eyebrow-line"></span> TEST DATA WORKBENCH</div>
+          <div class="eyebrow"><span class="eyebrow-line"></span> TEST DATA WORKBENCH <span class="hero-badge">v1.2 / LOCAL</span></div>
           <h1 id="page-title">Проверяйте формат.<br /><em>Не раскрывайте данные.</em></h1>
           <p class="hero-copy">Вставьте тестовые строки, чтобы проверить структуру и контрольную сумму Луна. В выдаче останутся только безопасные маски.</p>
         </section>
@@ -39,10 +39,12 @@
             <label class="sr-only" for="sourceText">Исходный текст со строками тестовых данных</label>
             <textarea id="sourceText" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="4242424242424242|12|34|123
 4242424242424242|01|28|999"></textarea>
-            <div class="file-tools">
+            <div class="file-drop" id="fileDrop" tabindex="0" role="button" aria-label="Добавить текстовый файл перетаскиванием или выбором">
               <input id="fileInput" type="file" accept=".txt,.log,.csv,.json,text/plain,text/csv,application/json" hidden />
-              <button class="file-button" id="fileButton" type="button"><span aria-hidden="true">↥</span> Добавить файл</button>
-              <span class="file-hint" id="fileName">TXT / CSV / JSON до 50 МБ</span>
+              <span class="drop-icon" aria-hidden="true">↥</span>
+              <span class="drop-copy"><strong>Перетащите файл сюда</strong><small>или выберите TXT / CSV / JSON до 50 МБ</small></span>
+              <button class="file-button" id="fileButton" type="button">Выбрать файл</button>
+              <span class="file-hint" id="fileName">файл не выбран</span>
             </div>
             <div class="input-meta">
               <span>Формат: <code>номер | MM | YY | CVV</code></span>
