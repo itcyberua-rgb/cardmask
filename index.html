@@ -39,6 +39,11 @@
             <label class="sr-only" for="sourceText">Исходный текст со строками тестовых данных</label>
             <textarea id="sourceText" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="4242424242424242|12|34|123
 4242424242424242|01|28|999"></textarea>
+            <div class="file-tools">
+              <input id="fileInput" type="file" accept=".txt,.log,.csv,.json,text/plain,text/csv,application/json" hidden />
+              <button class="file-button" id="fileButton" type="button"><span aria-hidden="true">↥</span> Добавить файл</button>
+              <span class="file-hint" id="fileName">TXT / CSV / JSON до 5 МБ</span>
+            </div>
             <div class="input-meta">
               <span>Формат: <code>номер|MM|YY|CVV</code></span>
               <span id="charCount">0 символов</span>
@@ -49,7 +54,7 @@
               </button>
               <button class="button button-quiet" id="clearButton" type="button">Очистить</button>
             </div>
-            <p class="microcopy"><span class="microcopy-lock">▣</span> Ничего не отправляется на сервер и не записывается в localStorage.</p>
+            <p class="microcopy"><span class="microcopy-lock">▣</span> Текст и файл читаются только в браузере и не записываются в localStorage.</p>
           </div>
 
           <div class="panel output-panel">

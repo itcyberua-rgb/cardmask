@@ -5,6 +5,9 @@
   const processButton = document.querySelector('#processButton');
   const clearButton = document.querySelector('#clearButton');
   const copyButton = document.querySelector('#copyButton');
+  const fileInput = document.querySelector('#fileInput');
+  const fileButton = document.querySelector('#fileButton');
+  const fileName = document.querySelector('#fileName');
   const resultList = document.querySelector('#resultList');
   const emptyState = document.querySelector('#emptyState');
   const errorList = document.querySelector('#errorList');
@@ -14,7 +17,7 @@
   const errorCount = document.querySelector('#errorCount');
   const toast = document.querySelector('#toast');
 
-  const recordPattern = /^(\d{13,19})\|(0[1-9]|1[0-2])\|(\d{2}|\d{4})\|(\d{3,4})$/;
+  const recordPattern = /(?<!\d)(\d{13,19})\|(0[1-9]|1[0-2])\|(\d{2}|\d{4})\|(\d{3,4})(?!\d)/g;
   let safeOutput = [];
   let toastTimer;
 
@@ -133,31 +136,27 @@
     const results = [];
     const errors = [];
     let matched = 0;
+    let match;
 
-    rawText.split(/\r?\n/).forEach((rawLine, index) => {
-      const line = rawLine.trim();
-      if (!line) return;
-
-      const match = recordPattern.exec(line);
-      if (!match) {
-        errors.push({ lineNumber: index + 1, reason: 'не совпадает с форматом номер|MM|YY|CVV' });
-        return;
-      }
-
+    while ((match = recordPattern.exec(rawText)) !== null) {
       matched += 1;
       const [, number, month, year] = match;
+      const lineNumber = rawText.slice(0, match.index).split(/\r?\n/).length;
+
       if (!luhnCheck(number)) {
-        errors.push({ lineNumber: index + 1, reason: 'номер не прошёл проверку Луна' });
-        return;
+        errors.push({ lineNumber, reason: 'номер не прошёл проверку Луна' });
+        continue;
       }
 
       results.push({
-        lineNumber: index + 1,
+        lineNumber,
         masked: maskNumber(number),
         month,
         year,
       });
-    });
+    }
+
+    recordPattern.lastIndex = 0;
 
     safeOutput = results.map((item) => `${item.masked}|${item.month}|${item.year}|[удалено]`);
     matchedCount.textContent = String(matched);
@@ -175,6 +174,7 @@
 
   function clearAll() {
     sourceText.value = '';
+    fileName.textContent = 'TXT / CSV / JSON до 5 МБ';
     safeOutput = [];
     matchedCount.textContent = '0';
     validCount.textContent = '0';
@@ -197,10 +197,32 @@
     }
   }
 
+  async function loadLocalFile(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      showToast('Файл слишком большой: максимум 5 МБ.');
+      return;
+    }
+
+    try {
+      sourceText.value = await file.text();
+      fileName.textContent = file.name;
+      updateCharCount();
+      showToast(`Файл «${file.name}» загружен локально.`);
+    } catch {
+      showToast('Не удалось прочитать текстовый файл.');
+    }
+  }
+
   sourceText.addEventListener('input', updateCharCount);
   processButton.addEventListener('click', processInput);
   clearButton.addEventListener('click', clearAll);
   copyButton.addEventListener('click', copySafeOutput);
+  fileButton.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', () => {
+    loadLocalFile(fileInput.files?.[0]);
+    fileInput.value = '';
+  });
 
   updateCharCount();
 })();
