@@ -17,7 +17,7 @@
   const errorCount = document.querySelector('#errorCount');
   const toast = document.querySelector('#toast');
 
-  const recordPattern = /(?<!\d)(\d{13,19})\|(0[1-9]|1[0-2])\|(\d{2}|\d{4})\|(\d{3,4})(?!\d)/g;
+  const recordPattern = /(?<!\d)((?:\d[ -]?){13,19})\s*\|\s*(0[1-9]|1[0-2])\s*\|\s*(\d{2}|\d{4})\s*\|\s*(\d{3,4})(?!\d)/g;
   let safeOutput = [];
   let toastTimer;
 
@@ -142,7 +142,8 @@
 
     while ((match = recordPattern.exec(rawText)) !== null) {
       matched += 1;
-      const [, number, month, year] = match;
+      const [, rawNumber, month, year] = match;
+      const number = rawNumber.replace(/[ -]/g, '');
       const lineNumber = rawText.slice(0, match.index).split(/\r?\n/).length;
 
       const valid = luhnCheck(number);
@@ -177,7 +178,7 @@
 
   function clearAll() {
     sourceText.value = '';
-    fileName.textContent = 'TXT / CSV / JSON до 5 МБ';
+    fileName.textContent = 'TXT / CSV / JSON до 50 МБ';
     safeOutput = [];
     matchedCount.textContent = '0';
     validCount.textContent = '0';
@@ -202,8 +203,8 @@
 
   async function loadLocalFile(file) {
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      showToast('Файл слишком большой: максимум 5 МБ.');
+    if (file.size > 50 * 1024 * 1024) {
+      showToast('Файл слишком большой: максимум 50 МБ.');
       return;
     }
 
