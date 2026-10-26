@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Локальная проверка и маскирование тестовых карточных строк без сохранения исходных данных." />
+    <title>CardMask — безопасный форматтер</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="CardMask, на главную">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>
+            <strong>CardMask</strong>
+            <small>локальный форматтер</small>
+          </span>
+        </a>
+        <div class="privacy-chip"><span class="status-dot"></span> данные не покидают браузер</div>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="page-title">
+          <div class="eyebrow"><span class="eyebrow-line"></span> TEST DATA WORKBENCH</div>
+          <h1 id="page-title">Проверяйте формат.<br /><em>Не раскрывайте данные.</em></h1>
+          <p class="hero-copy">Вставьте тестовые строки, чтобы проверить структуру и контрольную сумму Луна. В выдаче останутся только безопасные маски.</p>
+        </section>
+
+        <section class="workspace" aria-label="Обработка текста">
+          <div class="panel input-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">01 / INPUT</p>
+                <h2>Исходный текст</h2>
+              </div>
+              <span class="tiny-label">LOCAL ONLY</span>
+            </div>
+            <label class="sr-only" for="sourceText">Исходный текст со строками тестовых данных</label>
+            <textarea id="sourceText" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="4242424242424242|12|34|123
+4242424242424242|01|28|999"></textarea>
+            <div class="input-meta">
+              <span>Формат: <code>номер|MM|YY|CVV</code></span>
+              <span id="charCount">0 символов</span>
+            </div>
+            <div class="actions">
+              <button class="button button-primary" id="processButton" type="button">
+                <span class="button-icon">↗</span> Обработать текст
+              </button>
+              <button class="button button-quiet" id="clearButton" type="button">Очистить</button>
+            </div>
+            <p class="microcopy"><span class="microcopy-lock">▣</span> Ничего не отправляется на сервер и не записывается в localStorage.</p>
+          </div>
+
+          <div class="panel output-panel">
+            <div class="panel-heading output-heading">
+              <div>
+                <p class="section-kicker">02 / SAFE OUTPUT</p>
+                <h2>Безопасный результат</h2>
+              </div>
+              <button class="copy-button" id="copyButton" type="button" disabled>Скопировать</button>
+            </div>
+
+            <div class="metrics" aria-label="Сводка обработки">
+              <div class="metric"><span class="metric-label">РАСПОЗНАНО</span><strong id="matchedCount">0</strong></div>
+              <div class="metric metric-good"><span class="metric-label">ПРОШЛИ ЛУНА</span><strong id="validCount">0</strong></div>
+              <div class="metric metric-warn"><span class="metric-label">ОШИБКИ</span><strong id="errorCount">0</strong></div>
+            </div>
+
+            <div class="result-list" id="resultList" aria-live="polite">
+              <div class="empty-state" id="emptyState">
+                <div class="empty-icon" aria-hidden="true">⌁</div>
+                <h3>Результаты появятся здесь</h3>
+                <p>Вставьте тестовые строки слева и нажмите «Обработать текст».</p>
+              </div>
+            </div>
+
+            <div class="error-list" id="errorList" hidden></div>
+          </div>
+        </section>
+
+        <section class="safety-note" aria-label="Правила безопасности">
+          <div class="safety-icon" aria-hidden="true">✓</div>
+          <div>
+            <strong>Что именно выводится</strong>
+            <p>Только первые и последние четыре цифры, срок и пометка <code>[удалено]</code> вместо CVV. Полные номера и коды безопасности не попадают в результаты, сводку или сообщения.</p>
+          </div>
+          <div class="safety-rule">NO STORAGE<br /><span>NO NETWORK</span></div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>CardMask / безопасная проверка формата</span>
+        <span>Используйте только синтетические тестовые данные платёжного шлюза</span>
+      </footer>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
