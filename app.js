@@ -76,11 +76,13 @@
 
     const sub = document.createElement('span');
     sub.className = 'result-sub';
-    sub.textContent = `Строка ${item.lineNumber} · формат и Луна подтверждены`;
+    sub.textContent = item.valid
+      ? `Строка ${item.lineNumber} · формат и Луна подтверждены`
+      : `Строка ${item.lineNumber} · формат найден, Луна не пройдена`;
 
     const badge = document.createElement('span');
-    badge.className = 'result-badge';
-    badge.textContent = 'SAFE';
+    badge.className = `result-badge${item.valid ? '' : ' result-badge-warn'}`;
+    badge.textContent = item.valid ? 'SAFE' : 'CHECK';
 
     main.append(value, sub);
     row.append(main, badge);
@@ -143,9 +145,9 @@
       const [, number, month, year] = match;
       const lineNumber = rawText.slice(0, match.index).split(/\r?\n/).length;
 
-      if (!luhnCheck(number)) {
+      const valid = luhnCheck(number);
+      if (!valid) {
         errors.push({ lineNumber, reason: 'номер не прошёл проверку Луна' });
-        continue;
       }
 
       results.push({
@@ -153,6 +155,7 @@
         masked: maskNumber(number),
         month,
         year,
+        valid,
       });
     }
 
@@ -160,13 +163,13 @@
 
     safeOutput = results.map((item) => `${item.masked}|${item.month}|${item.year}|[удалено]`);
     matchedCount.textContent = String(matched);
-    validCount.textContent = String(results.length);
+    validCount.textContent = String(results.filter((item) => item.valid).length);
     errorCount.textContent = String(errors.length);
-    copyButton.disabled = results.length === 0;
+    copyButton.disabled = safeOutput.length === 0;
     renderResults(results, errors);
 
     if (results.length > 0) {
-      showToast(`Готово: ${results.length} безопасных ${pluralize(results.length, 'результат', 'результата', 'результатов')}.`);
+      showToast(`Найдено ${results.length} ${pluralize(results.length, 'совпадение', 'совпадения', 'совпадений')}.`);
     } else {
       showToast('Подходящих тестовых строк не найдено.');
     }

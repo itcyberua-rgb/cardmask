@@ -107,6 +107,7 @@ code { color: var(--mint); font-family: "SFMono-Regular", Consolas, monospace; f
 .result-value { display: block; overflow: hidden; color: var(--text); font-family: "SFMono-Regular", Consolas, monospace; font-size: 13px; letter-spacing: .01em; text-overflow: ellipsis; white-space: nowrap; }
 .result-sub { display: block; margin-top: 5px; color: var(--muted-2); font-size: 10px; }
 .result-badge { padding: 5px 7px; border-radius: 5px; background: rgba(155, 227, 191, 0.09); color: var(--mint); font-family: "SFMono-Regular", Consolas, monospace; font-size: 9px; letter-spacing: .04em; }
+.result-badge-warn { background: rgba(244, 197, 110, 0.1); color: var(--amber); }
 .error-list { margin-top: 15px; padding: 11px 13px; border: 1px solid rgba(244, 197, 110, 0.22); border-radius: 8px; background: rgba(244, 197, 110, 0.05); color: var(--amber); font-size: 11px; line-height: 1.6; }
 .error-list strong { display: block; margin-bottom: 4px; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 .error-item { display: block; }
